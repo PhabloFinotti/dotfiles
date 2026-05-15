@@ -16,27 +16,33 @@
 [init]
   defaultBranch = master
 
-[alias]
-        s = status
-        c = commit
-        check = checkout
-        b = branch
-        lg = log --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+[pull]
+  defaultBranch = master
+  rebase = true
 
-        amend = commit --amend --no-edit
-        allfiles = "!f() { git log --name-only --diff-filter=A --pretty=format: | sort -u; }; f"
-        cfg = config --list
-        changedfiles = "diff-tree --no-commit-id -r --name-only"
-        discard = reset HEAD --hard
-        discardchunk = checkout -p
-        ol = "log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-        others = "ls-files --others --ignored --exclude-from=.gitignore"
-        rmuntracked = clean -df
-        root = rev-parse --show-toplevel
-        searchfiles = "log --name-status --source --all -S"
-        searchtext = "!f() { git grep \"$*\" $(git rev-list --all); }; f"
-        uncommit = reset --soft HEAD^
-        unstage = reset HEAD --
-        wip = "!f() { git add . && git commit -m 'Work in progress'; }; f"
-        nah = "!f() { git reset --hard; }; f"
-        alias = ! git config --get-regexp ^alias\\. | sed -e s/^alias\\.// -e s/\\ /\\ =\\ /
+[alias]
+  s = status
+  c = commit
+  check = checkout
+  b = branch
+  lg = log --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+
+  amend = commit --amend --no-edit
+  allfiles = "!f() { git log --name-only --diff-filter=A --pretty=format: | sort -u; }; f"
+  cfg = config --list
+  changedfiles = "diff-tree --no-commit-id -r --name-only"
+  discard = reset HEAD --hard
+  discardchunk = checkout -p
+  ol = "log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+  others = "ls-files --others --ignored --exclude-from=.gitignore"
+  rmuntracked = clean -df
+  root = rev-parse --show-toplevel
+  searchfiles = "log --name-status --source --all -S"
+  searchtext = "!f() { git grep \"$*\" $(git rev-list --all); }; f"
+  uncommit = reset --soft HEAD^
+  unstage = reset HEAD --
+  wip = "!f() { git add . && git commit -m 'Work in progress'; }; f"
+  nah = "!f() { git reset --hard; }; f"
+  alias = ! git config --get-regexp ^alias\\. | sed -e s/^alias\\.// -e s/\\ /\\ =\\ /
+  clear-branches = !git fetch | git branch --v | grep '\\[gone\\]' | awk '{print $1}' | xargs git branch -D
+  latest-tag = !git describe --abbrev=0
