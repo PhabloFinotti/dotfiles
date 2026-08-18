@@ -122,14 +122,14 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # some more ls aliases
-alias ll='ls -alF'
+alias ll='ls -laFh'
 alias la='ls -A'
+alias lh='ls -lah'
 alias l='ls -CF'
 
+alias reload="exec zsh"
 
 # Docker *******************
-# Lista containers
-alias dps="docker ps --format 'table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}'"
 
 # Logs simples
 alias dlog="docker logs --tail 100"
@@ -142,9 +142,38 @@ alias dstats="docker stats"
 
 # Docker compose logs
 alias dclog="docker compose logs --tail 100"
-alias dclogf="docker compose logs -f --tail 50"
-# Docker *******************
+# alias dclogf="docker compose logs -f --tail 50"
 
+# Entrar no bash do container
+dexec() {
+  docker exec -it $1 bash
+}
+
+dclogf() {
+  docker compose -f $1 logs --tail 50 -f
+}
+
+# Lista containers
+dps() {
+  docker ps --format 'table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}' \
+    | { [ -n "$1" ] && grep "$1" || cat; }
+}
+
+docker-start() {
+    if [ -n "$1" ]; then
+        docker start $(docker ps -a -q -f "name=$1")
+    else
+        docker start $(docker ps -a -q)
+    fi
+}
+
+docker-stop() {
+    if [ -n "$1" ]; then
+        docker stop $(docker ps -q -f "name=$1")
+    else
+        docker stop $(docker ps -q)
+    fi
+}
 docker-restart() {
   local file=${1:-docker-compose-dev.yml}
 
@@ -156,3 +185,6 @@ docker-restart() {
   docker compose -f "$file" down -v
   docker compose -f "$file" up --build
 }
+# Docker *******************
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
